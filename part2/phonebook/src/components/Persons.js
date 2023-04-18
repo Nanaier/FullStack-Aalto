@@ -19,7 +19,7 @@ const Persons = ({ newFilter, persons, setPersons }) => {
     <ul>
       {personsToShow.map((person) => {
         return (
-          <li key={person.id}>
+          <li key={person.id} className="li-element">
             {person.name} {person.number}
             <button
               type="submit"

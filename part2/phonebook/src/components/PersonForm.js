@@ -7,6 +7,8 @@ const PersonForm = ({
   setNewNumber,
   persons,
   setPersons,
+  setErrorMessage,
+  setSuccessMessage
 }) => {
   const addName = (event) => {
     event.preventDefault();
@@ -21,11 +23,27 @@ const PersonForm = ({
       ) {
         const person = persons.find((p) => p.name === newName);
         const changedPerson = { ...person, number: newNumber };
-        PersonsService.update(person.id, changedPerson).then((response) => {
-          setPersons(
-            persons.map((p) => (p.name !== newName ? p : response.data))
-          );
-        });
+        PersonsService.update(person.id, changedPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((p) => (p.name !== newName ? p : response.data))
+            );
+            setSuccessMessage(
+              `${changedPerson.name}'s phone number was updated to ${changedPerson.number}`
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            setErrorMessage(
+              `The information of ${changedPerson.name} has already been removedfrom server`
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+
+          });
       }
     } else {
       const personObject = {
@@ -36,6 +54,10 @@ const PersonForm = ({
       PersonsService.create(personObject).then((response) => {
         setPersons(persons.concat(response.data));
       });
+      setSuccessMessage(`Added ${personObject.name}`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
     setNewName("");
     setNewNumber("");
