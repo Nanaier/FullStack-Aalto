@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
+import PersonsService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
@@ -9,7 +9,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
 
   const hook = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    PersonsService.getAll().then((response) => {
       console.log("promise fulfilled");
       setPersons(response.data);
     });
@@ -35,7 +35,11 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons newFilter={newFilter} persons={persons} />
+      <Persons
+        newFilter={newFilter}
+        persons={persons}
+        setPersons={setPersons}
+      />
     </div>
   );
 };
