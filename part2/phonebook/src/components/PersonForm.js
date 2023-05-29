@@ -8,7 +8,7 @@ const PersonForm = ({
   persons,
   setPersons,
   setErrorMessage,
-  setSuccessMessage
+  setSuccessMessage,
 }) => {
   const addName = (event) => {
     event.preventDefault();
@@ -37,27 +37,43 @@ const PersonForm = ({
           })
           .catch((error) => {
             setErrorMessage(
-              `The information of ${changedPerson.name} has already been removedfrom server`
+              `The information of ${changedPerson.name} has already been removed from server`
             );
             setTimeout(() => {
               setErrorMessage(null);
             }, 5000);
-
           });
       }
     } else {
       const personObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
-      PersonsService.create(personObject).then((response) => {
-        setPersons(persons.concat(response.data));
-      });
-      setSuccessMessage(`Added ${personObject.name}`);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      PersonsService.create(personObject)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+
+          setSuccessMessage(`Added ${personObject.name}`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            setErrorMessage(error.response.data.error);
+          } else if (error.response && error.response.data) {
+            setErrorMessage(error.response.data);
+          } else {
+            setErrorMessage("An error occurred while creating a person.");
+          }
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
     }
     setNewName("");
     setNewNumber("");
