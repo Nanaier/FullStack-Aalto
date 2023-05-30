@@ -74,6 +74,7 @@ describe("favorite blog", () => {
       {
         title: "Canonical string reduction",
         author: "Edsger W. Dijkstra",
+        url: "http://www.asdasdasdasd.com",
         likes: 12,
       },
     ];
@@ -90,16 +91,19 @@ describe("favorite blog", () => {
       {
         title: "Canonical string reduction",
         author: "Edsger W. Dijkstra",
+        url: "http://www.asdasdasdasd.com",
         likes: 12,
       },
       {
         title: "React patterns",
         author: "Michael Chan",
+        url: "http://www.asdasdasdasd.com",
         likes: 10,
       },
       {
         title: "First class tests",
         author: "Robert C. Martin",
+        url: "http://www.asdasdasdasd.com",
         likes: 8,
       },
     ];
@@ -116,16 +120,19 @@ describe("favorite blog", () => {
       {
         title: "React patterns",
         author: "Michael Chan",
+        url: "http://www.asdasdasdasd.com",
         likes: 10,
       },
       {
         title: "Canonical string reduction",
         author: "Edsger W. Dijkstra",
+        url: "http://www.asdasdasdasd.com",
         likes: 12,
       },
       {
         title: "Another favorite blog",
         author: "John Doe",
+        url: "http://www.asdasdasdasd.com",
         likes: 12,
       },
     ];
@@ -147,11 +154,36 @@ describe("The most blogs", () => {
 
   test("returns the author with the most blogs", () => {
     const blogs = [
-      { author: "Robert C. Martin", title: "Clean Code", likes: 12 },
-      { author: "Michael Chan", title: "React patterns", likes: 7 },
-      { author: "Robert C. Martin", title: "Clean Architecture", likes: 2 },
-      { author: "John Doe", title: "Intro to JavaScript", likes: 23 },
-      { author: "Robert C. Martin", title: "Agile Principles", likes: 1 },
+      {
+        author: "Robert C. Martin",
+        title: "Clean Code",
+        url: "http://www.asdasdasdasd.com",
+        likes: 12,
+      },
+      {
+        author: "Michael Chan",
+        title: "React patterns",
+        url: "http://www.asdasdasdasd.com",
+        likes: 7,
+      },
+      {
+        author: "Robert C. Martin",
+        title: "Clean Architecture",
+        url: "http://www.asdasdasdasd.com",
+        likes: 2,
+      },
+      {
+        author: "John Doe",
+        title: "Intro to JavaScript",
+        url: "http://www.asdasdasdasd.com",
+        likes: 23,
+      },
+      {
+        author: "Robert C. Martin",
+        title: "Agile Principles",
+        url: "http://www.asdasdasdasd.com",
+        likes: 1,
+      },
     ];
     const result = listHelper.mostBlogs(blogs);
     expect(result).toEqual({
@@ -170,16 +202,42 @@ describe("The most likes", () => {
 
   test("returns the author with the most likes", () => {
     const blogs = [
-      { author: "Robert C. Martin", title: "Clean Code", likes: 10 },
-      { author: "Michael Chan", title: "React patterns", likes: 5 },
-      { author: "Robert C. Martin", title: "Clean Architecture", likes: 8 },
-      { author: "John Doe", title: "Intro to JavaScript", likes: 2 },
+      {
+        author: "Robert C. Martin",
+        title: "Clean Code",
+        url: "http://www.asdasdasdasd.com",
+        likes: 10,
+      },
+      {
+        author: "Michael Chan",
+        title: "React patterns",
+        url: "http://www.asdasdasdasd.com",
+        likes: 5,
+      },
+      {
+        author: "Robert C. Martin",
+        title: "Clean Architecture",
+        url: "http://www.asdasdasdasd.com",
+        likes: 8,
+      },
+      {
+        author: "John Doe",
+        title: "Intro to JavaScript",
+        url: "http://www.asdasdasdasd.com",
+        likes: 2,
+      },
       {
         author: "Edsger W. Dijkstra",
         title: "Canonical string reduction",
+        url: "http://www.asdasdasdasd.com",
         likes: 12,
       },
-      { author: "Edsger W. Dijkstra", title: "Graph algorithms", likes: 5 },
+      {
+        author: "Edsger W. Dijkstra",
+        title: "Graph algorithms",
+        url: "http://www.asdasdasdasd.com",
+        likes: 5,
+      },
     ];
     const result = listHelper.mostLikes(blogs);
     expect(result).toEqual({
