@@ -4,37 +4,11 @@ const app = require("../app");
 
 const api = supertest(app);
 const Blog = require("../models/blog");
-
-const initialBlogs = [
-  {
-    author: "Michael Chan",
-    title: "React patterns",
-    url: "http://www.idfsjdfopsjdf.com",
-    likes: 5,
-  },
-  {
-    author: "Robert C. Martin",
-    title: "Clean Architecture",
-    url: "http://www.oocmvpoxjhuodhoo.com",
-    likes: 8,
-  },
-  {
-    author: "John Doe",
-    title: "Intro to JavaScript",
-    url: "http://www.lfjvdjfvipvc.com",
-    likes: 2,
-  },
-  {
-    author: "Edsger W. Dijkstra",
-    title: "Canonical string reduction",
-    url: "http://www.ufhufhsyvdfjhsoud.com",
-    likes: 12,
-  },
-];
+const helper = require("./test_helper");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  for (const initialBlog of initialBlogs) {
+  for (const initialBlog of helper.initialBlogs) {
     const blogObject = new Blog(initialBlog);
     await blogObject.save();
   }
@@ -42,7 +16,7 @@ beforeEach(async () => {
 
 test("returned blogs are of correct length", async () => {
   const response = await api.get("/api/blogs").expect(200);
-  expect(response.body).toHaveLength(initialBlogs.length);
+  expect(response.body).toHaveLength(helper.initialBlogs.length);
 }, 10000000);
 
 test("blog has a field id and not _id", async () => {
@@ -69,7 +43,7 @@ test("a valid blog can be added", async () => {
 
   const titles = response.body.map((r) => r.title);
 
-  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
   expect(titles).toContain("Intro to Typescript");
 });
 test("likes property defaults to 0 when missing from the request", async () => {
@@ -122,7 +96,7 @@ test("delete blog post", async () => {
   await api.delete(`/api/blogs/${id}`).expect(204);
   const responseNew = await api.get("/api/blogs");
 
-  expect(responseNew.body).toHaveLength(initialBlogs.length - 1);
+  expect(responseNew.body).toHaveLength(helper.initialBlogs.length - 1);
 });
 
 test("update blog post", async () => {
