@@ -2,11 +2,9 @@ const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
 
 blogRouter.get("/", (request, response) => {
-  Blog.find({})
-    .then((blogs) => {
-      response.json(blogs);
-    })
-    .catch((error) => logger.error(error.message));
+  Blog.find({}).then((blogs) => {
+    response.json(blogs);
+  });
 });
 
 blogRouter.post("/", (request, response) => {
@@ -18,12 +16,9 @@ blogRouter.post("/", (request, response) => {
     likes: body.likes,
   });
 
-  blog
-    .save()
-    .then((result) => {
-      response.json(result);
-    })
-    .catch((error) => logger.error(error.message));
+  blog.save().then((result) => {
+    response.json(result);
+  });
 });
 
 module.exports = blogRouter;
