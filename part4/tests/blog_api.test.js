@@ -113,6 +113,33 @@ test("Backend responds with 400 Bad Request if url is missing", async () => {
     })
     .expect(400);
 });
+
+test("delete blog post", async () => {
+  const response = await api.get("/api/blogs");
+
+  const ids = response.body.map((r) => r.id);
+  const id = ids[Math.floor(Math.random() * ids.length)];
+  await api.delete(`/api/blogs/${id}`).expect(204);
+  const responseNew = await api.get("/api/blogs");
+
+  expect(responseNew.body).toHaveLength(initialBlogs.length - 1);
+});
+
+test("update blog post", async () => {
+  const response = await api.get("/api/blogs");
+
+  const ids = response.body.map((r) => r.id);
+  const id = ids[Math.floor(Math.random() * ids.length)];
+  await api
+    .put(`/api/blogs/${id}`)
+    .send({
+      likes: 12,
+    })
+    .expect(204);
+  const updatedBlog = await Blog.findById(id);
+  expect(updatedBlog.likes).toBe(12);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
