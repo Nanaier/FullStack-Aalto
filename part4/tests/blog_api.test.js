@@ -5,6 +5,14 @@ const app = require("../app");
 const api = supertest(app);
 const Blog = require("../models/blog");
 const helper = require("./test_helper");
+const User = require("../models/user");
+
+beforeAll(async () => {
+  await User.deleteMany({});
+  await api.post("/api/users/").send({ username: "username", name: "name", password: "password" });
+});
+
+let token = "";
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -12,6 +20,8 @@ beforeEach(async () => {
     const blogObject = new Blog(initialBlog);
     await blogObject.save();
   }
+  const response = await api.post("/api/login").send({ username: "username", password: "password" });
+  token = response.body.token;
 });
 
 test("returned blogs are of correct length", async () => {
@@ -26,8 +36,9 @@ test("blog has a field id and not _id", async () => {
 }, 10000000);
 
 test("a valid blog can be added", async () => {
+
   const newBlog = {
-    author: "Anastasiia Lysenko",
+    author: "Anastasiia",
     title: "Intro to Typescript",
     url: "http://www.lfjvdjfvipvc.com",
     likes: 15,
@@ -36,6 +47,7 @@ test("a valid blog can be added", async () => {
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set({ "Authorization": `Bearer ${token}` })
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
@@ -46,6 +58,7 @@ test("a valid blog can be added", async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
   expect(titles).toContain("Intro to Typescript");
 });
+
 test("likes property defaults to 0 when missing from the request", async () => {
   const newBlog = {
     title: "Test Blog",
@@ -56,6 +69,7 @@ test("likes property defaults to 0 when missing from the request", async () => {
   await api
     .post("/api/blogs")
     .send(newBlog)
+    .set({ "Authorization": `Bearer ${token}` })
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
@@ -73,6 +87,7 @@ test("Backend responds with 400 Bad Request if title is missing", async () => {
       author: "John Doe",
       likes: 12,
     })
+    .set({ "Authorization": `Bearer ${token}` })
     .expect(400);
 });
 
@@ -85,18 +100,33 @@ test("Backend responds with 400 Bad Request if url is missing", async () => {
       author: "John Doe",
       likes: 12,
     })
+    .set({ "Authorization": `Bearer ${token}` })
     .expect(400);
 });
 
 test("delete blog post", async () => {
+  const newBlog = {
+    title: "Test Blog",
+    author: "John Doe",
+    url: "http://www.sirgfgkdfiycekc.com",
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .set({ "Authorization": `Bearer ${token}` })
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
   const response = await api.get("/api/blogs");
 
+
   const ids = response.body.map((r) => r.id);
-  const id = ids[Math.floor(Math.random() * ids.length)];
-  await api.delete(`/api/blogs/${id}`).expect(204);
+  //const id = ids[Math.floor(Math.random() * ids.length)];
+  await api.delete(`/api/blogs/${response.body[ids.length-1].id}`).set({ "Authorization": `Bearer ${token}` }).expect(204);
   const responseNew = await api.get("/api/blogs");
 
-  expect(responseNew.body).toHaveLength(helper.initialBlogs.length - 1);
+  expect(responseNew.body).toHaveLength(helper.initialBlogs.length);
 });
 
 test("update blog post", async () => {
@@ -112,6 +142,21 @@ test("update blog post", async () => {
     .expect(204);
   const updatedBlog = await Blog.findById(id);
   expect(updatedBlog.likes).toBe(12);
+});
+
+test("a valid blog cannot be added without authorization", async () => {
+
+  const newBlog = {
+    author: "TestUser",
+    title: "Test Title",
+    url: "http://www.test.com",
+    likes: 7,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(401)
 });
 
 afterAll(async () => {

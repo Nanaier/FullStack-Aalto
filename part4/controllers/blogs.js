@@ -39,7 +39,7 @@ blogRouter.post("/", async (request, response) => {
     });
     const result = await blog.save();
     if (result) {
-      user.notes = user.notes.concat(result.id);
+      user.blogs = user.blogs.concat(result.id);
       await user.save();
       response.status(201).json(result);
     } else {
