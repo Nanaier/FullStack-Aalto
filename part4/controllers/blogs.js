@@ -66,12 +66,12 @@ blogRouter.delete("/:id", async (request, response) => {
 });
 
 blogRouter.put("/:id", async (request, response) => {
-  await Blog.findByIdAndUpdate(
+  const updBlog = await Blog.findByIdAndUpdate(
     request.params.id,
     { likes: request.body.likes },
     { new: true }
   );
-  response.status(204).end();
+  if (updBlog) response.json(updBlog);
 });
 
 module.exports = blogRouter;
