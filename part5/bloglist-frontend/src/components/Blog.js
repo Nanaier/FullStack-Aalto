@@ -23,7 +23,7 @@ const Blog = ({ blog, setBlogs }) => {
     }; // Increment the likes by 1
     try {
       const updBlog = await blogService.update(blog.id, updatedBlog);
-      setBlogs(await blogService.getAll());
+      if (setBlogs) setBlogs(await blogService.getAll());
       const populatedBlogState = { ...updBlog, user: blog.user };
       setBlogState(populatedBlogState);
     } catch (error) {
@@ -35,7 +35,7 @@ const Blog = ({ blog, setBlogs }) => {
     try {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
         await blogService.deleteById(blog.id);
-        setBlogs(await blogService.getAll());
+        if (setBlogs) setBlogs(await blogService.getAll());
         setBlogState(null);
       }
     } catch (error) {
@@ -49,19 +49,21 @@ const Blog = ({ blog, setBlogs }) => {
       {blogState ? (
         <div style={blogStyle}>
           <div>
-            {blogState.title} {blogState.author}
+            <span className="title">{blogState.title}</span>{" "}
+            <span className="author">{blogState.author}</span>
             <button onClick={() => setBlogVisible(!blogVisible)}>
               {blogVisible ? "hide" : "view"}
             </button>
           </div>
-          <div style={showWhenVisible}>
-            <p>{blogState.url} </p>
-            <p>
+          <div style={showWhenVisible} className="hiddenInfo">
+            <p className="url">{blogState.url} </p>
+            <p className="likes">
               {blogState.likes}{" "}
               <button
                 onClick={() => {
                   handleUpdate(blogState);
                 }}
+                className="likesButton"
               >
                 like
               </button>
@@ -96,7 +98,7 @@ Blog.propTypes = {
     }).isRequired,
     id: PropTypes.string.isRequired,
   }).isRequired,
-  setBlogs: PropTypes.any.isRequired,
+  setBlogs: PropTypes.any,
 };
 
 export default Blog;
