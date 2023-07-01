@@ -76,7 +76,7 @@ const App = () => {
     setUser(null);
     setUsername("");
     setPassword("");
-    setMessage(`User logged out!`);
+    setMessage("User logged out!");
     setTimeout(() => {
       setMessage(null);
     }, 5000);
@@ -98,7 +98,6 @@ const App = () => {
       </div>
     );
   };
-  
 
   return (
     <div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const Blog = ({ blog, setBlogs }) => {
   const [blogVisible, setBlogVisible] = useState(false);
@@ -34,8 +35,8 @@ const Blog = ({ blog, setBlogs }) => {
     try {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
         await blogService.deleteById(blog.id);
-      setBlogs(await blogService.getAll());
-      setBlogState(null);
+        setBlogs(await blogService.getAll());
+        setBlogState(null);
       }
     } catch (error) {
       console.log("Error deleting blog:", error);
@@ -80,6 +81,22 @@ const Blog = ({ blog, setBlogs }) => {
       )}
     </>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  setBlogs: PropTypes.any.isRequired,
 };
 
 export default Blog;
