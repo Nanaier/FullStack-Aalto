@@ -2,7 +2,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, setBlogs }) => {
+const Blog = ({ blog, setBlogs, user }) => {
   const [blogVisible, setBlogVisible] = useState(false);
   const [blogState, setBlogState] = useState(blog);
   const blogStyle = {
@@ -47,7 +47,7 @@ const Blog = ({ blog, setBlogs }) => {
   return (
     <>
       {blogState ? (
-        <div style={blogStyle}>
+        <div style={blogStyle} className="blog">
           <div>
             <span className="title">{blogState.title}</span>{" "}
             <span className="author">{blogState.author}</span>
@@ -69,13 +69,17 @@ const Blog = ({ blog, setBlogs }) => {
               </button>
             </p>
             <p>{blogState.user.name}</p>
-            <button
-              onClick={() => {
-                handleDelete(blogState);
-              }}
-            >
-              delete
-            </button>
+            {user.username === blogState.user.username ? (
+              <button
+                onClick={() => {
+                  handleDelete(blogState);
+                }}
+              >
+                delete
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       ) : (

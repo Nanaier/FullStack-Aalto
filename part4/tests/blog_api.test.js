@@ -139,7 +139,7 @@ test("update blog post", async () => {
     .send({
       likes: 12,
     })
-    .expect(204);
+    .expect(200);
   const updatedBlog = await Blog.findById(id);
   expect(updatedBlog.likes).toBe(12);
 });
